@@ -1,20 +1,64 @@
 ---
 layout: post
-category : lessons
-tagline: "Supporting tagline"
-tags : [intro, beginner, jekyll, tutorial]
+category : Internet
+title: GitHub pages und jekyll
+tagline: "Kostenloser Webspace mit eingebautem Blogsystem"
+tags : [jekyll, github pages, blog]
 ---
 {% include JB/setup %}
 
-This Jekyll introduction will outline specifically  what Jekyll is and why you would want to use it.
-Directly following the intro we'll learn exactly _how_ Jekyll does what it does.
+# Vorwort
 
-## Overview
+Vor einiger Zeit habe ich verschiedene Webseiten mittels Joomla auf gesetzt. Zunächst war ich begeistert von der
+Möglichkeit überall per Browser Artikel verfassen zu können. Auch das große Angebot von Plug-Ins hat angesprochen.
+Und das Templatesystem und das Angebot an kostenlosen Templates ist sehr gut.
 
-### What is Jekyll?
+Aber nach und nach bekam ich auch die Nachteile zu spüren. Ein Hoster mit MySql-Datenbank und PHP wird benötigt.
+Wenn sich der Inhalt wirklich ändern muss ein regelmäßige Backup durchgeführt werden. Außerdem muss die Software immer
+auf dem neuesten Stand gehalten werden.
 
-Jekyll is a parsing engine bundled as a ruby gem used to build static websites from
-dynamic components such as templates, partials, liquid code, markdown, etc. Jekyll is known as "a simple, blog aware, static site generator".
+Oftmals erkennt man, dass bei einem Projekt die umfassenden Möglichkeiten von Joomla gar nicht wirklich genutzt werden.
+Wenn dann ein Projekt einschläft und man die Updates vergisst kann es schnell passieren, dass die Webseite gehackt wird
+und die Säuberung großen Aufwand verursacht.
+
+Außerdem sind die großen Versionssprüng oft mit viel Arbeit verbunden. Plug-Ins oder Templates sind nicht mehr
+kompatibel und die Migration selbst erfordert eine Testlauf, ggf. sogar eine paralelle Installation.
+
+All das wollte ich für meine eigen Webseite los werden. Per Zufall bin ich über GitHub pages und jekyll gestolpert.
+Ich habe mich entschlossen diesen Blog mit den beiden "Tools" aufzusetzen und eine kleine Anleitung dazu zu verfassen.
+
+# GitHub pages
+
+Die meisten von uns kennen GitHub bereits. Falls Sie damit nicht anfangen können hier eine kleine Erklärung von
+Wikipedia:
+GitHub ist ein webbasierter Hosting-Dienst für Software-Entwicklungsprojekte. Namensgebend ist das 
+Versionsverwaltungs-System Git.
+
+GitHub pages ist nun eine Erweiterung die darauf spezialisiert ist eine Webseite direkt aus einem git Repository zu
+veröffentlichen. Alles was man tun muss ist ein neues GitHub repository zu erstellen und bei der Namensgebung einem
+bestimmten Schema zu folgen:
+
+\<gewünschter Name\>.github.io also z.B. kaltokri.github.io
+
+Wenn man nun eine html-Datei dem Repository hinzufügt und sie hoch lädt, kann man sie über die gewählte URl erreichen.
+Somit ist man in der Lage eine statische Webseite kostenlose zu veröffentlichen. Und diese Webseite ist über git
+natürlich Versionsverwaltet. Das an sich ist schon eine tolle Sache, aber GitHub pages kann noch viel mehr.
+
+Es gibt einen automatischen Webseiten Generator der eine Webseite mit Hilfe einer wählbaren Vorlage erstellt. So erhält
+man einen einfachen und schnellen Einstieg.
+
+GitHub pages lifert aber auch noch ein komplettes Blogsystem mit: jekyll
+
+Jedes GitHub pages Repository unterstützt automatisch jekyll, sofern die Verzeichnisstrukturen richtig angelegt werden.
+
+# Was ist Jekyll?
+
+Jekyll ist ein Generator für statische Webseiten im Blog Stil. jekyll ist geschrieben in Ruby und besteht aus
+dynamischen Komponenten wie z.B. Templates und statischen Daten wie z.B. Markdown Dokumente.
+
+Jekyll benötigt keine Datenbank! Die Artikel werden mittels eifachem Texteditor geschrieben in git verwaltet und
+hochgeladen. Durch die Templates wird eine optisch ansprechende Webseite daraus generiert. Ein Backup ist nicht nötig,
+da das git repository bereits auf unseren Rechner existiert.
 
 ### Examples
 
