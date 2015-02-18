@@ -14,6 +14,7 @@ Modem einrichten, anwählen, anmelden. "Bitte geben Sie einen Benutzernamen ein!
 Als mir nichts mehr einfiel, hörte ich den Ton vom Fernseher. Es lief gerade ein alter Disney Film: "Captain Blackbirds Spuck Kaschemme". Und der Hauptdarsteller murmelte einen fremd klingenden Zauberspruch. Das letzte Wort war "Kaltokri!". Benutzername Kaltokri. "Willkommen bei AOL!". Seitdem benutze ich diesen Namen.
 
 # Technische Daten
+<img src="img/rolf-geuenich.png" alt="Rolf Geuenich" style="box-shadow: none;" align="left" width="150" vspace="20" hspace="20">
 <table>
     <tr><td><strong>Vorname</strong></td><td>Rolf</td></tr>
     <tr><td><strong>Nachname</strong></td><td>Geuenich geb. Dohms</td></tr>
