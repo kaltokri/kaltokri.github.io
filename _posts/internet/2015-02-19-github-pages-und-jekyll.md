@@ -9,10 +9,10 @@ tags : [jekyll, github pages, blog]
 
 # Vorwort
 
-Seit einiger Zeit betreibe ich verschiedene Webseiten mit [Joomla][]. Jetzt wollte ich für mich mal eine Alternative testen,
-bei der man nicht immer wieder Updates einspielen muss. Nachdem ich mir verschiedene CMS Systeme angeschaut hatte bin
-ich per Zufall über [GitHub pages][] und [Jekyll][] gestolpert. Diese Seite ist mittels [Jekyll][] erstellt worden und
-wird auf [GitHub pages][] gehosted.
+Seit einiger Zeit betreibe ich verschiedene Webseiten mit [Joomla][]. Jetzt wollte ich für mich mal eine Alternative
+testen, bei der man nicht immer wieder Updates einspielen muss. Nachdem ich mir verschiedene CMS Systeme angeschaut
+hatte bin ich per Zufall über [GitHub pages][] und [Jekyll][] gestolpert. Diese Seite ist mittels [Jekyll][] erstellt
+worden und wird auf [GitHub pages][] gehosted.
 
 # GitHub pages
 
@@ -52,7 +52,7 @@ aus dynamischen Komponenten wie z.B. Templates und statischen Daten wie z.B. [Ma
 
 Jekyll benötigt keine Datenbank. Die Artikel werden mit einem einfachen Texteditor geschrieben, in git verwaltet und
 hoch geladen. Durch die Templates wird eine optisch ansprechende Webseite daraus generiert. Ein Backup ist nicht nötig,
-da das git Repository bereits auf unserem Rechner und in [GitHub][] existiert.
+da das git Repository bereits auf dem lokalen Rechner und in [GitHub][] existiert.
 
 ## Lokale Installation
 
@@ -76,7 +76,7 @@ Um eine neue Jekyll-Umgebung zu erzeugen startet man eine Eingabeaufforderung we
 
     setpath.cmd
 
-Dadurch werden die Umgebungsvariable in der Eingabeaufforderung so angepaßt, dass Jekyll ausgeführt werden kann.
+Dadurch werden die Umgebungsvariable in der Eingabeaufforderung so angepasst, dass Jekyll ausgeführt werden kann.
 Außerhalb der Eingabeaufforderung hat das keinen Einfluss. D.h. es wird keine Einstellung des Betriebssystems dauerhaft
 verändert!
 
@@ -92,13 +92,17 @@ folgenden Befehl aus:
 
     jekyll serve
 
-Dieser Befehl startet einen Jekyll Server auf den lokalen Rechner der unter http://localhost:4000 erreichbar ist.
+Dieser Befehl startet einen Jekyll Server auf dem lokalen Rechner der unter http://localhost:4000 erreichbar ist.
 
 Jetzt kann man sich in Ruhe in Jekyll einarbeiten und verschiedene Dinge ausprobieren.
 
 ## Weitere Informationen
-Auf der Jekyll Webseite findet sich eine ausführliche Dokumentation in englisch. Ich werde in zukünftigen Blog-Artikeln
-weiter auf die Einrichtung und Anpassung von Jekyll eingehen und beschreiben wie man Inhalte hinzufügen kann.
+Auf der [Jekyll][] Webseite findet sich eine ausführliche [Dokumentation][] in englisch. Ich werde in zukünftigen
+Blog-Artikeln weiter auf die Einrichtung und Anpassung von Jekyll eingehen und beschreiben wie man Inhalte hinzufügen
+kann. Und ich werde beschreiben wie die erzeugten Dateien in GitHub gepusht werden.
+
+Ich hoffe dieser Artikel hilft Ihnen den Einstieg in Jekyll und GitHub pages zu erleichtern. Viel Spass beim testen von
+[Jekyll][] und GitHub pages.
 
 [Joomla]: http://www.joomla.de/ "Joomla"
 [kaltokri.github.io]: http://kaltokri.github.io/ "Private Webseite von kaltokri"
@@ -107,5 +111,6 @@ weiter auf die Einrichtung und Anpassung von Jekyll eingehen und beschreiben wie
 [GitHubGenerator]: https://help.github.com/articles/creating-pages-with-the-automatic-generator/ "GitHub Generator"
 [Jekyll]: http://jekyllrb.com/ "Jekyll"
 [Ruby]: https://www.ruby-lang.org/de/ "Ruby"
+[Dokumentation]: http://jekyllrb.com/docs/home/ "Dokumentation"
 [Markdown]: http://markdown.de/ "Markdown"
 [PortableJekyll]: https://github.com/madhur/PortableJekyll "PortableJekyll"
