@@ -67,7 +67,7 @@ erstmal die benötigte Ordnerstruktur:
     CD /D %USERPROFILE%
     MKDIR .chef
 
-Im Ordner `.chef` erstellen wir eine Textdatei mit folgendem Inhalt:
+Im Ordner `.chef` erstellen wir die Textdatei `knife.rb` mit folgendem Inhalt:
 
     cookbook_path [ '.', './cookbooks' ]
     cache_type 'BasicFile'
@@ -110,7 +110,7 @@ require 'chefspec'
 
 describe 'example::default' do
     let(:chef_run) { ChefSpec::SoloRunner.converge(described_recipe) }
-    
+
     it 'installs perl' do
         expect(chef_run).to install_package('perl')
     end
@@ -145,12 +145,75 @@ Google brachte keine brauchbaren Lösungsvorschläge, aber nachdem ich auf Chef-
 das Problem verschwunden und ChefSpec funktioniert einwandfrei.
 </div>
 
-# Erstellung Jenkins-Job
+# Erstellung des Jenkins-Job
+Nun wollen wir die einzelnen Schritte im [Jenkins][] als Job konfigurieren. Dazu erstellen wir einen neuen
+FreeStyle-Job. Auf die allgemeinen Einstellungen des Jobs gehe ich nicht näher ein. Jeder der sich mit [Jenkins][] schon
+befasst hat, sollte die passende Konfiguration vom Source-Code-Management, den Build-Auslösern oder die Log-Rotation für
+seine Belange bereits kennen.
 
+Wir fügen als Buildschritt `Windows Batch-Datei ausführen` hinzu. Bei einem Linux-System nehmen wir natürlich
+`Shell ausführen`. Für jeden Befehl müssen wir einen eigenen Build-Schritt hinzufügen. Das stellt sicher, dass die
+Rückgabewerte der eizelnen Tools vom [Jenkins][] ausgewertet werden.
+
+* `knife cookbook test -a`
+* `foodcritic ./cookbooks`
+* `rspec cookbooks`
+
+Wenn der [Jenkins][] unter Windows als Dienst eingerichtet ist, dann müssen wir ihn so konfigurieren, dass er mit einem
+Benutzer startet und nicht als `Lokales Systemkonto`.
+
+![Jenkins Benutzer](/assets/images/devops/eigenschaften-vom-jenkins-dienst.jpg)
+
+Im Home-Verzeichnis dieses Benutzers (hier im Beispiel `meinBenutzer` genannt) müssen wir wie oben beschrieben die Datei
+`knife.rb` im Unterordner `.chef` anlegen. Ansonsten sucht der Aufruf von [Knife][] im [Jenkins][] die [Cookbooks][] an
+der falschen Stelle.
+
+Bei einem [Ruby][] Syntax-Fehler bricht der Job direkt ab und ist fehlgeschlagen. Wenn [foodcritic][] etwas findet bleibt
+der Build jedoch stabil. Das ist nicht der gewünschte Effekt.
+
+Wer möchte kann den Build bei einem gefundenen Fehler fehlschlagen lassen. Dazu nutzt man folgendes Kommando:
+
+    foodcritic -f any ./cookbooks
+
+Alternativ gibt es noch den Parameter `-f correctness` der Schönheitsfehler ignoriert.
+
+Falls man aber möchte, dass der Build den Status `Unstable` bekommt, installiert man das [Warnings Plugin][]. Unter
+`Jenkins verwalten` -> `System konfigurieren` gibt es nun eine neue Kategorie `Compiler Warnungen`. Dort fügen wir einen
+Parser hinzu:
+
+* Unter `Name`, `Name des Ergebnislinks` und `Name des Trends` trägt man `Foodcritic` ein.
+* Als `Regulärer Ausdruck` wird folgendes verwendet:
+{% highlight perl %}
+^(FC[0-9]+): (.*): ([^:]+):([0-9]+)$
+{% endhighlight %}
+* Und unter `Auswertungs-Skript` fügt man folgenden Code ein:
+{% highlight groovy %}
+String fileName = matcher.group(3)
+String lineNumber = matcher.group(4)
+String category = matcher.group(1)
+String message = matcher.group(2)
+
+return new Warning(fileName, Integer.parseInt(lineNumber), "Chef Lint Warning", category, message);
+{% endhighlight %}
+* Testen kann man den Parser indem man unter `Beispielmeldung` diese Warnung einfügt:
+<pre>FC001: Use strings in preference to symbols to access node attributes: ./recipes/innostore.rb:30</pre>
+* Unter dem Textfeld `Beispielmeldung` erscheint dann eine Auswertung.
+
+Diese Einstellungen speichert man ab.
+
+Jetzt muss man im Buildjob noch einen Post-Build-Schritt hinzufügen: `Suche nach Compiler Warnungen`.
+Als `Parser`wählen wir den eben erstellen `Foodcritic` aus. Bei `Status Grenzwerte` legen wir `0` bei `Unstable` für
+alle Prioritäten fest.
+
+Wenn der Build jetzt eine Warnung findet, wird sie in den Buildresultaten sehr schön dokumentiert. Der Verlauf wird nach
+ein paar Builds angezeigt und wir können den Entwickler mittels [Email-Ext-Plugin][] auf die Probleme hinweisen.
+
+Sollte ein Unit-Test fehlschlagen, dann wird der Jenkins-Job fehlschlagen.
 
 # Wie geht es weiter
-Ich möchte den ersten Artikel an der Stelle beenden damit er nicht zu lang wird. Im zweiten Blog-Artikel dieser Reihe befassen
-wir uns mit der Erstellung des Buildjob im [Jenkins][].
+Ich möchte den ersten Artikel an dieser Stelle beenden damit er nicht zu lang wird. Im zweiten Blog-Artikel dieser Reihe
+befassen wir uns mit weiteren Tools zur Prüfung von [Cookbooks][]. Ich hoffe der Artikel war informativ und hilft dem
+ein oder anderen bei der Einrichtung einer automatisierten Überprüfung der geschriebenen [Chef][] [Cookbooks][].
 
 [Chef]: https://www.chef.io/ "Chef"
 [Chef-DK]: https://downloads.chef.io/chef-dk/ "Chef-DK"
@@ -169,5 +232,6 @@ wir uns mit der Erstellung des Buildjob im [Jenkins][].
 [Lint]: http://de.wikipedia.org/wiki/Lint_%28Programmierwerkzeug%29 "Lint"
 [RSpec]: http://rspec.info/ "RSpec"
 [Perl]: https://www.perl.org/ "Perl"
-[SimpleCov]: https://github.com/colszowka/simplecov "SimpleCov"
 [Chef recipe code coverage]: https://sethvargo.com/chef-recipe-code-coverage/ "Blog: Chef recipe code coverage"
+[Warnings Plugin]: https://wiki.jenkins-ci.org/display/JENKINS/Warnings+Plugin "Warnings Plugin"
+[Email-Ext-Plugin]: https://wiki.jenkins-ci.org/display/JENKINS/Email-ext+plugin "Email-Ext-Plugin"
