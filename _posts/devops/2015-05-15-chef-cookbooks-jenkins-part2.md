@@ -2,7 +2,7 @@
 layout: post
 category : DevOps
 title: Chef Cookbooks mit Jenkins prüfen, Teil2
-tagline: "Automatisierte Qualitätssicherung im Chef Umfeld"
+tagline: "ChefSpec-Auswertung hinzufügen"
 tags : [Chef, Ruby, Provisioning, Jenkins]
 ---
 {% include JB/setup %}
@@ -14,18 +14,19 @@ Im [ersten Teil der Artikelreihe]({% post_url /devops/2015-04-07-chef-cookbooks-
 [Jenkins][] Job erstellt, der mittels [Knife][] die [Ruby][] Syntax prüft. Wenn er einen Fehler findet wird der Job
 abgebrochen und erhält den Status fehlgeschlagen.
 
-Im zweiten Schritt prüfen wir mittels [Foodcritic][] den Code auf Schwachstellen. Je nach übergebenen Parametern und
-Konfiguration vom [Warnings Plugin][] bricht der Job entweder ab oder läuft weiter und führt auch die weiteren Analysen
-durch. Letzteres würde ich immer empfehlen um möglichst viele Probleme auf einmal aufzudecken.
+Im zweiten Build-Schritt definierten wir die Prüfung auf Schwachstellen im Code mittels [Foodcritic][]. Je nach
+übergebenen Parametern und Konfiguration vom [Warnings Plugin][] bricht der Job entweder ab oder läuft weiter und führt
+auch die weiteren Analysen durch. Letzteres würde ich immer empfehlen um möglichst viele Probleme auf einmal
+aufzudecken.
 
 Zuletzt haben wir einen Buildschritt für [ChefSpec][] eingebaut. Schlägt ein (oder mehrere) Test(s) fehl wird der Job
 abgebrochen und ist fehlgeschlagen.
 
-# ChefSpec: Auswertung hinzufügen
+# ChefSpec-Auswertung hinzufügen
 Den letzten Punkt möchte ich ändern. Wenn ein Unit-Test fehlschlägt möchte ich die nachfolgenden Analysen trotzdem
 laufen lassen und möglichst viele Problem im Build aufzudecken. Das hat den Nachteil, dass u.U. Folgefehler
 angezeigt werden. Andererseits erspart man sich oft mehrfach fehlschlagende Builds weil sich der Entwickler von einer
-Fehlerbehebung zur nächsten schichtweise durch kämpft.
+Fehlerbehebung zur nächsten schichtweise durchkämpft.
 
 Um das zu erreichen fügen wir folgenden Parameter dem Aufruf hinzu:
 
@@ -38,18 +39,19 @@ gibt es ein [gem][] mit dem Namen [rspec_junit_formatter][]. Dieses [gem][] ist 
 <h5>Versionskonflikt im Chef-DK 0.4.0</h5>
 Bei der Ausführung von RSpec mit dem rspec_junit_formatter kommt immer folgender Fehler:
 <pre>Unable to activate rspec-2.14.1, because rspec-core-3.1.7 conflicts with rspec-core (~> 2.14.0) (Gem::ConflictError)</pre>
-Glücklicherweise läßt sich das recht einfach beheben. Folgender Befehl lädt die neueste Version herunter:
+Glücklicherweise lässt sich das recht einfach beheben. Folgender Befehl lädt die neueste Version herunter:
 <pre>gem install rspec_junit_formatter</pre>
-ACHTUNG: Das gem wird aber im Home-Verzeichnis des Benutzers abgelegt! Das Problem ist also nicht für alle Benutzer zentral
-behoben. Jeder Benutzer muss den Befehl bei sich ausführen.
+ACHTUNG: Das gem wird aber im Home-Verzeichnis des Benutzers abgelegt! Das Problem ist also nicht für alle Benutzer
+zentral behoben. Jeder Benutzer muss den Befehl bei sich ausführen. D.h. man muss es auch bei dem Benutzer ausführen,
+unter dem der Jenkins Dienst läuft.
 </div>
 
 Jetzt können wir den Aufruf von [RSpec][] wie folgt ändern:
 
     rspec --format RspecJunitFormatter --out chefspec-results.xml --failure-exit-code 0 ./cookbooks
 
-Als letztes installieren wir das [Violations Plugin][] für den [Jenkins][]. Danach können wir den neuen Post-Build-Schritt
-`Veröffentlich JUnit-Testergebnisse` hinzufügen. Im Textfeld `Testberichte in XML-Format` geben wir
+Als letztes installieren wir das [Violations Plugin][] für den [Jenkins][]. Danach können wir den neuen
+Post-Build-Schritt `Veröffentlich JUnit-Testergebnisse` hinzufügen. Im Textfeld `Testberichte in XML-Format` geben wir
 `chefspec-results.xml` ein und speichern.
 
 Ab dem nächsten Build erhalten wir eine detaillierte Auswertung der Tests. Und ab dem zweiten Build auch eine
@@ -58,28 +60,17 @@ Trend-Grafik:
 ![ChefSpec Trendauswertung](/assets/images/devops/chefspec-trend.jpg)
 
 # Schlusswort
-Ich möchte den Artikel an der Stelle beenden damit er nicht zu lang wird. Im zweiten Blog-Artikel dieser Reihe befassen
-wir uns mit der Erstellung des Buildjob im [Jenkins][].
+Ich werde dazu über gehen immer nur kleine Artikel zu schreiben und online zu stellen, da größere Artikel zu lange
+brauchen um geschrieben zu werden und daher offline bleiben. Also werde ich Continous Integration auch bei meinem Blog
+anwenden und möglichst kleine abgeschlossene Inkremente (Artikel) veröffentlichen.
 
-[Chef]: https://www.chef.io/ "Chef"
 [Chef-DK]: https://downloads.chef.io/chef-dk/ "Chef-DK"
-[chef-solo]: https://docs.chef.io/chef_solo.html "chef-solo"
-[CheckStyle]: http://checkstyle.sourceforge.net/ "checkstyle"
-[FindBugs]: http://findbugs.sourceforge.net/ "FindBugs"
-[Cookbooks]: http://docs.chef.io/cookbooks.html "About Cookbooks"
-[RuboCop]: https://github.com/bbatsov/rubocop "RuboCop"
 [Foodcritic]: http://www.foodcritic.io/ "Foodcritic"
 [Knife]: https://docs.chef.io/knife.html "Knife"
 [ChefSpec]: https://docs.chef.io/chefspec.html "ChefSpec"
-[Kitchen]: https://docs.chef.io/kitchen.html "Kitchen"
 [Ruby]: https://www.ruby-lang.org/de/ "Ruby"
-[SimpleCov]: https://github.com/colszowka/simplecov "SimpleCov"
 [Jenkins]: https://jenkins-ci.org/ "Jenkins"
-[Lint]: http://de.wikipedia.org/wiki/Lint_%28Programmierwerkzeug%29 "Lint"
 [RSpec]: http://rspec.info/ "RSpec"
-[Perl]: https://www.perl.org/ "Perl"
-[SimpleCov]: https://github.com/colszowka/simplecov "SimpleCov"
-[Chef recipe code coverage]: https://sethvargo.com/chef-recipe-code-coverage/ "Blog: Chef recipe code coverage"
 [Warnings Plugin]: https://wiki.jenkins-ci.org/display/JENKINS/Warnings+Plugin "Warnings Plugin"
 [Violations Plugin]: https://wiki.jenkins-ci.org/display/JENKINS/Violations "Violations Plugin"
 [gem]: https://rubygems.org/ "gem"
