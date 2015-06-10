@@ -3,7 +3,7 @@ layout: post
 category : DevOps
 title: Eclipse und Bash-Skripte
 tagline: "Bash-Skripte mit Eclipse bearbeiten"
-tags : [Chef, Ruby, Provisioning, Eclipse]
+tags : [Provisioning, Eclipse, Bash]
 ---
 {% include JB/setup %}
 <div class="toc"></div>
